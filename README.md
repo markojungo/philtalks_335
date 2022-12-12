@@ -1,29 +1,23 @@
-# philtalks_335
+# Philtalks 335
+CMSC335 Final Project
 
-This template should help get you started developing with Vue 3 in Vite.
+## About
+We use Vue.js for the frontend (`/client`). Vuetify is used for prepackaged Vue components that look nice. Vite is used to run the development server.
 
-## Recommended IDE Setup
+The server uses Express.js and can be found in `/server`.
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
-
+## Getting Started
 ```sh
+cd client
 npm install
+cd ../server
+npm install
+cd ../
+cp .env.sample .env
 ```
-
-### Compile and Hot-Reload for Development
-
+Fill out `.env` file. Then, open two terminals.
 ```sh
-npm run dev
+npm run client
+npm run server
 ```
-
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
+This will run the client frontend (Vue/Vuetify/Vite) and also server backend (Express).
