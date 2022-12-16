@@ -119,7 +119,7 @@
       leaveRoom: async function () {
         this.$router.push({name: 'Main'})
         
-        axios.post(`http://localhost:8000/rooms/${this.id}`, {
+        axios.post(`https://philtalks-335-server.onrender.com/rooms/${this.id}`, {
           name: this.name,
           chat: '/leave'
         })
@@ -128,7 +128,7 @@
 
       },
       sendChat: async function () {
-        const res = await axios.post(`http://localhost:8000/rooms/${this.id}`, {
+        const res = await axios.post(`https://philtalks-335-server.onrender.com/rooms/${this.id}`, {
           name: this.name,
           chat: this.chatToSend,
         })
@@ -148,9 +148,9 @@
     async mounted () {
       let res
       if (this.$route.params.id)
-        res = await axios.get(`http://localhost:8000/rooms/${this.$route.params.id}`)
+        res = await axios.get(`https://philtalks-335-server.onrender.com/rooms/${this.$route.params.id}`)
       else
-        res = await axios.get(`http://localhost:8000/rooms`)
+        res = await axios.get(`https://philtalks-335-server.onrender.com/rooms`)
       let {
         id, participants, question, chatTexts, name
       } = res.data
@@ -169,12 +169,12 @@
       this.chatToSend = " HAS ARRIVED."
       this.sendChat();
 
-      this.socket = io(`http://localhost:4000`, {transports: ['websocket'], upgrade: false})
-      this.socket.on('new-message', function (data) {
-        if (this.id == data.id) {
-          this.chatTexts.push({name: data.name, chat: data.chat})
-        }
-      }.bind(this))
+      // this.socket = io(`http://localhost:4000`, {transports: ['websocket'], upgrade: false})
+      // this.socket.on('new-message', function (data) {
+      //   if (this.id == data.id) {
+      //     this.chatTexts.push({name: data.name, chat: data.chat})
+      //   }
+      // }.bind(this))
     },
   }
 </script>
