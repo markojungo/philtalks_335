@@ -15,12 +15,6 @@ const router = createRouter({
       name: 'Room',
       component: () => import('../components/Room.vue'),
     },
-    // {
-    //   path: '/room',
-    //   name: 'Room',
-    //   component: () => import('../components/Room.vue'),
-    //   alias: '/room'
-    // },
     {
       path: '/:catchAll(.*)',
       name: '404',
