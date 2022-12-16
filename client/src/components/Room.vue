@@ -5,7 +5,7 @@
     >
       <div class="">
         <!--<h2 class="text-h2">Joining room {{ this.roomKey }}</h2>-->
-        <h2 class="text-h2">Joining room...</h2>
+        <h2 class="text-h2">Waiting for a customer service representative to add you to a room...</h2>
         <div class="d-flex justify-center mt-5">
           <v-progress-circular
             :size="150"
