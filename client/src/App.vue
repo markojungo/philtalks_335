@@ -39,14 +39,15 @@ export default {
   data: () => ({
     drawer: null,
     navbarImg: navbarUrl,
-    navbarBackgroundImg: navbarBackground
-  }),
+    navbarBackgroundImg: navbarBackground,
+    mainBack: null
+  })
 };
 </script>
 
 <style>
   .main {
-    background-image: url('./assets/background_red.png');
+    /* background-image: url('./assets/background_red.png'); */
     background-size: 100% 100%;
   }
   .room {

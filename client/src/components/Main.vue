@@ -3,10 +3,10 @@ import { RouterLink } from 'vue-router'
 </script>
 
 <template>
-  <div class='main d-flex align-center'>
+  <div class='main d-flex align-center' :style="{ backgroundImage: 'url(' + mainBack + ')' }">
     <v-container class='d-flex justify-center'>
       <RouterLink 
-        to="/room" 
+        to="/room"  
         class='text-bold text-decoration-none d-block'
       >
         <v-btn
@@ -31,6 +31,13 @@ import { RouterLink } from 'vue-router'
 <script>
   export default {
     name: 'MainView',
+    data: () => ({
+      mainBack: null,
+    }),
+    async mounted() {
+      const res = await axios.get("https://cataas.com/cat")
+      this.mainBack = URL.createObjectURL(await res.blob())
+    }
   }
 </script>
 
