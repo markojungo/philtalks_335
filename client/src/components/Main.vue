@@ -36,7 +36,9 @@ import { RouterLink } from 'vue-router'
     }),
     async mounted() {
       const res = await axios.get("https://cataas.com/cat")
+      console.log(res)
       this.mainBack = URL.createObjectURL(await res.blob())
+      console.log(this.mainBack)
     }
   }
 </script>
