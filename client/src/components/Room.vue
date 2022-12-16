@@ -90,6 +90,7 @@
 
 <script>
   import axios from 'axios'
+  import { io } from 'socket.io-client'
 
   export default {
     name: 'Room',
@@ -102,6 +103,7 @@
       chatTexts: [],
       name: '', // Current User's name
       chatToSend: '',
+      socket: null
     }),
 
     computed: {
@@ -115,11 +117,15 @@
 
     methods: {
       leaveRoom: async function () {
-        participantLeave(this.name, this.id)
-        this.chatToSend = 'has left the room'
-        await this.sendChat()
-
         this.$router.push({name: 'Main'})
+        
+        axios.post(`http://localhost:8000/rooms/${this.id}`, {
+          name: this.name,
+          chat: '/leave'
+        })
+        this.chatToSend = 'has left the room'
+        this.sendChat()
+
       },
       sendChat: async function () {
         const res = await axios.post(`http://localhost:8000/rooms/${this.id}`, {
@@ -133,6 +139,9 @@
           var chat = document.getElementById('chat')
           chat.scrollTop = chat.scrollHeight;
         })
+
+        this.socket.emit('save-message', { id: this.id, name: this.name, chat: this.chatToSend })
+        console.log('emitted')
       }
     },
 
@@ -159,6 +168,13 @@
 
       this.chatToSend = " HAS ARRIVED."
       this.sendChat();
+
+      this.socket = io(`http://localhost:4000`, {transports: ['websocket'], upgrade: false})
+      this.socket.on('new-message', function (data) {
+        if (this.id == data.id) {
+          this.chatTexts.push({name: data.name, chat: data.chat})
+        }
+      }.bind(this))
     },
   }
 </script>

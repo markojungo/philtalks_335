@@ -53,7 +53,6 @@ const addParticipant = async (id = null) => {
 
             await cursor.forEach(room => {
                 if (room.participants.length < MAX_ROOMSIZE) {
-                    console.log("Found room")
                     id = room.id
                     participants = room.participants
                     question = room.question
@@ -93,11 +92,16 @@ const participantLeave = async (name, id) => {
     try {
         await client.connect()
         let rooms = client.db(db.name).collection(db.rooms)
-        let participants = await rooms.find({id: Number(id)}).toArray()[0].participants
+        let participants = await rooms.find({id: Number(id)}).toArray()
         
+        if (!participants)
+            return
+        
+        participants = participants[0].participants
+
         const i = participants.indexOf(name)
         if (i != -1) {
-            participants = participants.splice(index, 1)
+            participants = participants.splice(i, 1)
             await rooms.updateOne(
                 {id: Number(id)},
                 {$set: {participants: participants}}

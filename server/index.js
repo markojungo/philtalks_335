@@ -9,10 +9,10 @@ const bodyParser = require('body-parser')
 dotenv.config({ path: path.resolve(__dirname, "../.env") });
 
 const {
-    addParticipant, updateChat
+    addParticipant, updateChat, participantLeave
 } = require('./api')
 
-const PORT = process.env.SERVER_PORT || 8080
+const PORT = process.env.VITE_SERVER_PORT
 var app = express()
 app.use(cors({ origin: '*' }))
 app.use(bodyParser.json())
@@ -21,6 +21,26 @@ app.use((req, res, next) => {
     const fullURL = `${req.protocol}://${req.get('host')}${req.originalUrl}`
     console.log(`Recieved request (${fullURL}): ${req.data} `)
     next()
+})
+
+var server = require('http').createServer(app);
+var io = require('socket.io')(server);
+
+server.listen(4000);
+
+// socket io
+io.set('transports', ['websocket']);
+io.on('connection', socket => {
+    console.log('User connected');
+    socket.on('disconnect', () => console.log('User disconnected'))
+    socket.on('save-message', data => {
+        console.log('saving message: ' + data)
+        io.emit('new-message', data)
+    })
+})
+
+app.get('/', (req, res) => {
+    res.sendFile('../client/dist/index.html', {root: __dirname})
 })
 
 app.get('/rooms', async (req, res) => {
@@ -50,8 +70,14 @@ app.post('/rooms/:id', async (req, res) => {
     try {
         let { name, chat } = req.body
         let id = req.params.id
-        let chatTexts = await updateChat(name, id, chat)
-        res.status(200).json([chatTexts])
+        
+        if (chat == '/leave') {
+            await participantLeave(name, id)
+            res.status(200).end()
+        } else {
+            let chatTexts = await updateChat(name, id, chat)
+            res.status(200).json([chatTexts])
+        }
     } catch (e) {
         console.log(e)
     }
