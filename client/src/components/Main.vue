@@ -4,7 +4,7 @@ import axios from 'axios'
 </script>
 
 <template>
-  <div class='main d-flex align-center' v-bind:style="{ background-image: 'url(data:image/png;base64,' + mainBack + ')' }">
+  <div class='main d-flex align-center' v-bind:style="{ backgroundImage: 'url(' + mainBack+')'}">
     <v-container class='d-flex justify-center'>
       <RouterLink 
         to="/room"  
@@ -36,13 +36,11 @@ import axios from 'axios'
       mainBack: null,
     }),
     async mounted() {
-      const res = await axios.get("https://cataas.com/cat")
+      const res = await fetch("https://api.thecatapi.com/v1/images/search")
       console.log(res)
-      console.log(res.body)
-      console.log(res.data)
-      // this.mainBack = URL.createObjectURL(await res.body.blob())
-      this.mainBack = btoa(res.data)
-      console.log(this.mainBack)
+      const jason = await res.json()
+      console.log(jason)
+      this.mainBack = jason[0].url
     }
   }
 </script>
