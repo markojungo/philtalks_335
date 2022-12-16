@@ -4,7 +4,7 @@ import axios from 'axios'
 </script>
 
 <template>
-  <div class='main d-flex align-center' :style="{ backgroundImage: 'url(data:image/png;base64,' + mainBack + ')' }">
+  <div class='main d-flex align-center' v-bind:style="{ background-image: 'url(data:image/png;base64,' + mainBack + ')' }">
     <v-container class='d-flex justify-center'>
       <RouterLink 
         to="/room"  
@@ -41,7 +41,7 @@ import axios from 'axios'
       console.log(res.body)
       console.log(res.data)
       // this.mainBack = URL.createObjectURL(await res.body.blob())
-      this.mainBack = res.data
+      this.mainBack = btoa(res.data)
       console.log(this.mainBack)
     }
   }
