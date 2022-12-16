@@ -31,7 +31,7 @@ server.listen(4000);
 // socket io
 io.set('transports', ['websocket']);
 io.on('connection', socket => {
-    console.log('User connected');
+    console.log(`User connected ${socket.id}`);
     socket.on('disconnect', () => console.log('User disconnected'))
     socket.on('save-message', data => {
         console.log('saving message: ' + data)
@@ -59,7 +59,7 @@ app.get('/rooms/:id', async (req, res) => {
     try {
         const {
             id, participants, question, chatTexts, name
-        } = await addParticipant();
+        } = await addParticipant(req.id);
         res.status(200).json({id, participants, question, chatTexts, name})
     } catch (e) {
         console.log(e)
@@ -70,7 +70,7 @@ app.post('/rooms/:id', async (req, res) => {
     try {
         let { name, chat } = req.body
         let id = req.params.id
-        
+
         if (chat == '/leave') {
             await participantLeave(name, id)
             res.status(200).end()

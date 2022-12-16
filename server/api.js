@@ -38,45 +38,69 @@ const createRoom = async (name) => {
         question: QUESTIONS[Math.floor(Math.random() * QUESTIONS.length)],
     }
     await client.db(db.name).collection(db.rooms).insertOne(roomData)
+
+    return roomData
 }
 
 const addParticipant = async (id = null) => {
     try {
         await client.connect()
-        let rooms = client.db(db.name).collection(db.rooms)
+        let rooms = await client.db(db.name).collection(db.rooms)
         let [question, name] = [null, null]
         let participants = []
         let chatTexts = []
 
         if (id == null) {
-            let cursor = rooms.find({});
-
-            await cursor.forEach(room => {
+            for (let room in rooms) {
                 if (room.participants.length < MAX_ROOMSIZE) {
                     id = room.id
                     participants = room.participants
                     question = room.question
                     chatTexts = room.chatTexts
-                    return
+                    break
                 }
-            })
+            }
         } else {
-            let room = rooms.findOne({id: Number(id)})
+            let room = await rooms.findOne({id: Number(id)})
             participants = room.participants
             question = room.question
             chatTexts = room.chatTexts
         }
     
         if (id) { /* Update participants */
-            availnames = PHILOSOPHERS.filter(name => !participants.includes(name))
-            name = availnames[0]
-            participants.push(name)
-            await rooms.updateOne({ id: Number(id) }, { 
-                $set: { participants: participants }
-            })
+            if (participants.length < MAX_ROOMSIZE) {
+                availnames = PHILOSOPHERS.filter(name => !participants.includes(name))
+                name = availnames[0]
+                participants.push(name)
+                await rooms.updateOne({ id: Number(id) }, { 
+                    $set: { participants: participants }
+                })
+            } else {
+                name = PHILOSOPHERS[0]
+                let roomData = {
+                    id: Math.floor(Math.random() * 90000) + 10000, /* random 5-digit id */
+                    participants: [name],
+                    chatTexts: [],
+                    question: QUESTIONS[Math.floor(Math.random() * QUESTIONS.length)],
+                }
+
+                id, participants, chatTexts, question = roomData
+                await client.db(db.name).collection(db.rooms).insertOne(roomData)
+                console.log('New room created')
+                participants.push(name)
+            }
         } else { /* Create new room if none found */
             name = PHILOSOPHERS[0]
-            await createRoom(name)
+            let roomData = {
+                id: Math.floor(Math.random() * 90000) + 10000, /* random 5-digit id */
+                participants: [name],
+                chatTexts: [],
+                question: QUESTIONS[Math.floor(Math.random() * QUESTIONS.length)],
+            }
+
+            id, participants, chatTexts, question = roomData
+            await client.db(db.name).collection(db.rooms).insertOne(roomData)
+            console.log(id)
             console.log('New room created')
             participants.push(name)
         }
