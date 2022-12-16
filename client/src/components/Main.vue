@@ -38,7 +38,7 @@ import axios from 'axios'
     async mounted() {
       const res = await axios.get("https://cataas.com/cat")
       console.log(res)
-      this.mainBack = URL.createObjectURL(await res.blob())
+      this.mainBack = URL.createObjectURL(await res.body.blob())
       console.log(this.mainBack)
     }
   }
