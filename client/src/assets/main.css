@@ -8,6 +8,54 @@
   font-weight: normal;
 }
 
+/*CSS for the main page image and bkgd*/
+.main {
+  height: 100%;
+}
+
+.welcome {
+  background-color: rgba(255, 255, 255, 0.29);
+}
+
+/*CSS for the room page*/
+  .hide {
+    display: none !important;
+  }
+
+  .room {
+    height: 100%;
+    width: 100%;
+  }
+
+  .loadingContainer {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .active {
+    color:brown;
+  }
+
+  .w100 {
+    width: 100%;
+  }
+
+  .tile {
+    background: rgba(255, 255, 255, .5)
+  }
+  .tile:hover {
+    background: rgba(0, 0, 0, .1)
+  }
+
+  #chat {
+    height: 300px;
+    overflow-y: scroll;
+  }
+
+
 a,
 .green {
   text-decoration: none;
